@@ -1,5 +1,6 @@
+import { drizzle } from 'drizzle-orm/mysql2';
 import { NextRequest, NextResponse } from 'next/server';
-import { db, dbConnection } from '~/server/db';
+import { db, dbConnection, ReconnectToDB } from '~/server/db';
 import { levels } from '~/server/db/schema';
 
 export async function GET(req: NextRequest){
@@ -16,7 +17,7 @@ export async function GET(req: NextRequest){
     } catch (error) {
         console.log("Connected to DB canceled " + JSON.stringify(error))
         try {
-            await dbConnection.connect();
+            ReconnectToDB();
             return GET(req);
         } catch (_error) {
             console.log("Failed to connect to DB " + JSON.stringify(_error) + ".");

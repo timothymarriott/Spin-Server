@@ -9,7 +9,16 @@ import * as schema from "./schema";
  * update.
  */
 
-const conn = await mysql.createConnection(env.DATABASE_URL);
+let conn = await mysql.createConnection({
+  uri: env.DATABASE_URL
+});
 
 export const dbConnection = conn;
-export const db = drizzle(conn);
+export let db = drizzle(conn);
+
+export async function ReconnectToDB(){
+  conn = await mysql.createConnection({
+    uri: env.DATABASE_URL
+  });
+  db = drizzle(conn);
+}
