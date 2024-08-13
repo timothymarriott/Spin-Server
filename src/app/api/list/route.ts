@@ -17,7 +17,7 @@ export async function GET(req: NextRequest){
     } catch (error) {
         console.log("Connected to DB canceled " + JSON.stringify(error))
         try {
-            ReconnectToDB();
+            await ReconnectToDB();
             return GET(req);
         } catch (_error) {
             console.log("Failed to connect to DB " + JSON.stringify(_error) + ".");
