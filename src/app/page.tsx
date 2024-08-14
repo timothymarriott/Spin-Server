@@ -12,7 +12,7 @@ export default async function HomePage() {
 
   const res = await fetch("http://127.0.0.1:3000/api/list", {cache: "no-store"});
 
-  const levelList: LevelList = await res.json();
+  const levelList: LevelList = (await res.json()) as LevelList;
 
   return (
     <main className="min-h-screen ">
