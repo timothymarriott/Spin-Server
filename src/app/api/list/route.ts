@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db, dbConnection, ReconnectToDB } from '~/server/db';
 import { levels } from '~/server/db/schema';
 
+export interface LevelList{
+    levels: {name: string, author: string, guid: string, url: string}[]
+}
+
 export async function GET(req: NextRequest){
     const {searchParams} = new URL(req.url);
 

@@ -23,7 +23,7 @@ export const createTable = mysqlTableCreator((name) => `spin-server_${name}`);
 export const levels = createTable(
   "level",
   {
-    id: int("id").autoincrement(),
+    id: int("id").primaryKey().autoincrement(),
     name: text("name"),
     author: text("author"),
     guid: text("guid"),
@@ -34,7 +34,7 @@ export const levels = createTable(
 export const users = createTable(
   "user",
   {
-    id: int("id").autoincrement(),
+    id: int("id").primaryKey().autoincrement(),
     name: text("name"),
     password: text("password"),
     guid: text("guid")
