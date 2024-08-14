@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { METHODS } from "http";
+import { redirect } from "next/navigation";
 
 export function LevelListView(props: {list: LevelList}) {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -72,9 +73,7 @@ export function LevelListView(props: {list: LevelList}) {
                             }}> <b>Delete</b> </DropdownMenuItem>
 
                             <DropdownMenuItem onClick={(e) => {
-                                setCurrentDeletion({levelauthor: level.author, levelid: level.guid})
-                                setIsValid(false);
-                                setShowDeleteConfirmation(true)
+                                redirect("http://127.0.0.1:3000/api/download?id=" + level.guid)
                             }}> Download </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
