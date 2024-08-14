@@ -74,7 +74,9 @@ export function LevelListView(props: {list: LevelList}) {
                             }}> <b>Delete</b> </DropdownMenuItem>
 
                             <DropdownMenuItem onClick={(e) => {
-                                const url = "http://127.0.0.1:3000/api/download?id=" + level.guid;
+                                const url = document.URL + "/api/download?id=" + level.guid;
+
+                                alert(url);
                                 
                                 const obj = document.createElement("a");
                                 obj.href = url;
