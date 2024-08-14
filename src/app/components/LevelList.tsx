@@ -4,14 +4,15 @@ import Link from "next/link";
 import { LevelList } from "~/app/api/list/route";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "~/components/ui/dropdown-menu";
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { DotsVerticalIcon, DownloadIcon } from "@radix-ui/react-icons";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "~/components/ui/alert-dialog";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { METHODS } from "http";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
+import { doc } from "prettier";
 
 export function LevelListView(props: {list: LevelList}) {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -73,7 +74,14 @@ export function LevelListView(props: {list: LevelList}) {
                             }}> <b>Delete</b> </DropdownMenuItem>
 
                             <DropdownMenuItem onClick={(e) => {
-                                redirect("http://127.0.0.1:3000/api/download?id=" + level.guid)
+                                const url = "http://127.0.0.1:3000/api/download?id=" + level.guid;
+                                
+                                const obj = document.createElement("a");
+                                obj.href = url;
+                                obj.setAttribute("download", level.name + ".lvl");
+                                document.body.appendChild(obj);
+                                obj.click();
+                                document.body.removeChild(obj);
                             }}> Download </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
