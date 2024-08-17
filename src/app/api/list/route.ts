@@ -1,6 +1,7 @@
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/mysql2';
 import { NextRequest, NextResponse } from 'next/server';
-import { db, dbConnection, ReconnectToDB } from '~/server/db';
+import { db, dbConnection, EnsureDBConnection, ReconnectToDB } from '~/server/db';
 import { levels } from '~/server/db/schema';
 
 export interface LevelList{
@@ -8,29 +9,28 @@ export interface LevelList{
 }
 
 export async function GET(req: NextRequest){
-    const {searchParams} = new URL(req.url);
 
+    return EnsureDBConnection(async () => {
+        const {searchParams} = new URL(req.url);
 
-    try {
-        const selectedLevels = await db.select().from(levels);
-        const res: any[] = [];
-        selectedLevels.forEach(level => {
-            res.push({name: level.name, author: level.author, guid: level.guid, url: level.file});
-        });
-        return NextResponse.json({levels: res}, {status: 200})
-    } catch (error) {
-        console.log("Connected to DB canceled " + JSON.stringify(error))
-        try {
-            await ReconnectToDB();
-            return GET(req);
-        } catch (_error) {
-            console.log("Failed to connect to DB " + JSON.stringify(_error) + ".");
-            return NextResponse.json({}, {status: 500})
+        if (!searchParams.has("author")){
+            const selectedLevels = await db.select().from(levels);
+            const res: any[] = [];
+            selectedLevels.forEach(level => {
+                res.push({name: level.name, author: level.author, guid: level.guid, url: level.file});
+            });
+            return NextResponse.json({levels: res}, {status: 200})
+        } else {
+            const levelAuthor = searchParams.get("author")!;
+            const selectedLevels = await db.select().from(levels).where(eq(levels.author, levelAuthor));
+            const res: any[] = [];
+            selectedLevels.forEach(level => {
+                res.push({name: level.name, author: level.author, guid: level.guid, url: level.file});
+            });
+            return NextResponse.json({levels: res}, {status: 200})
         }
-        
-        
-    }
-    
 
-    
+
+    });
+
 }
